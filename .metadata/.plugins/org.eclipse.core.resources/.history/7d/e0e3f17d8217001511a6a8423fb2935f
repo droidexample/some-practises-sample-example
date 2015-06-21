@@ -1,0 +1,106 @@
+package com.rama.vollaywebservicedemo;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.os.Bundle;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
+
+import com.android.volley.Request.Method;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+public class MainActivity extends Activity {
+
+	String getUrl = "http://10.0.2.2/onlineregistration/db_getall.php";
+
+	ArrayList<HashMap<String, String>> itemList;
+	ProgressDialog pd;
+	ArrayList<String> nameList;
+	ListView listView;
+
+	// JSON Node names
+	public static final String ITEM_NAME = "NAME";
+	public static final String ITEM_EMAIL = "EMAIL";
+	public static final String ITEM_PHONE = "PHONE";
+	public static final String ITEM_ADDRESs = "ADDRESS";
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+
+		listView = (ListView) findViewById(R.id.lV);
+
+		pd = new ProgressDialog(this);
+		pd.setMessage("Loading.....");
+		pd.setCancelable(false);
+		
+	}
+
+	
+	private void ReadDataFromDB() {
+        pd.show();
+        JsonObjectRequest jreq = new JsonObjectRequest(Method.GET, getUrl, null,
+                new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            int success = response.getInt("success");
+
+                            if (success == 1) {
+                                JSONArray ja = response.getJSONArray("orders");
+
+                                for (int i = 0; i < ja.length(); i++) {
+
+                                    JSONObject jobj = ja.getJSONObject(i);
+                                    HashMap<String, String> item = new HashMap<String, String>();
+                                    item.put(ITEM_NAME,
+                                            jobj.getString(ITEM_NAME));
+
+                                    itemList.add(item);
+
+                                } // for loop ends
+
+                                String[] from = { ITEM_ID, ITEM_NAME };
+                                int[] to = { R.id.item_id, R.id.item_name };
+
+                                adapter = new SimpleAdapter(
+                                        getApplicationContext(), Item_List,
+                                        R.layout.list_items, from, to);
+
+                                setListAdapter(adapter);
+
+                                PD.dismiss();
+
+                            } // if ends
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        PD.dismiss();
+                    }
+                });
+
+        // Adding request to request queue
+        MyApplication.getInstance().addToReqQueue(jreq);
+
+    }
+
+	
+}

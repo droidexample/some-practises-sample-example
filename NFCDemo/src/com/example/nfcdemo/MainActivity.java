@@ -1,0 +1,84 @@
+package com.example.nfcdemo;
+
+import android.nfc.NdefMessage;
+import android.nfc.NdefRecord;
+import android.nfc.NfcAdapter;
+import android.nfc.NfcAdapter.CreateNdefMessageCallback;
+import android.nfc.NfcAdapter.OnNdefPushCompleteCallback;
+import android.nfc.NfcEvent;
+import android.os.Bundle;
+import android.os.Parcelable;
+import android.app.Activity;
+import android.content.Intent;
+import android.view.Menu;
+import android.widget.TextView;
+import android.widget.Toast;
+
+public class MainActivity extends Activity implements
+		CreateNdefMessageCallback, OnNdefPushCompleteCallback {
+
+	TextView textInfo;
+	NfcAdapter nfcAdapter;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+
+		textInfo = (TextView) findViewById(R.id.info);
+		nfcAdapter = NfcAdapter.getDefaultAdapter(this);
+
+		if (nfcAdapter == null) {
+			Toast.makeText(getApplicationContext(),
+					"nfcAdapter= null, no NFC adapter exits", Toast.LENGTH_LONG)
+					.show();
+		} else {
+			Toast.makeText(getApplicationContext(), "set callback(s)",
+					Toast.LENGTH_LONG).show();
+			nfcAdapter.setNdefPushMessageCallback(this, this);
+			nfcAdapter.setOnNdefPushCompleteCallback(this, this);
+		}
+
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		Intent intent = new Intent();
+		String action = intent.getAction();
+		if (action.equals(nfcAdapter.ACTION_NDEF_DISCOVERED)) {
+			Parcelable[] parcelables = intent
+					.getParcelableArrayExtra(nfcAdapter.EXTRA_NDEF_MESSAGES);
+			NdefMessage ndefMessage = (NdefMessage) parcelables[0];
+			NdefRecord[] ndfRecord = ndefMessage.getRecords();
+			NdefRecord ndeRecord_0 = ndfRecord[0];
+			String inMag = new String(ndeRecord_0.getPayload());
+			textInfo.setText(inMag);
+		}
+	}
+
+	@Override
+	public void onNdefPushComplete(NfcEvent event) {
+		final String eventString = "onNodePushComplete\n" + event.toString();
+		runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				Toast.makeText(getApplicationContext(), eventString,
+						Toast.LENGTH_LONG).show();
+			}
+		});
+	}
+
+	@Override
+	public NdefMessage createNdefMessage(NfcEvent event) {
+		NdefRecord ndefRecord = NdefRecord.createUri("http://google.com");
+		return new NdefMessage(ndefRecord);
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		setIntent(intent);
+	}
+
+}

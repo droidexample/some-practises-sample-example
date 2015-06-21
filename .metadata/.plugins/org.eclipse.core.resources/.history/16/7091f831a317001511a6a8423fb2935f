@@ -1,0 +1,25 @@
+package com.rama.vollaywebservicedemo;
+
+import android.app.Activity;
+import android.os.Bundle;
+import android.widget.EditText;
+
+public class UpdateActivity extends Activity {
+
+	EditText etName, etEmail, etPhone, etAddress;
+
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_update);
+		etName = (EditText) findViewById(R.id.upName);
+		etEmail = (EditText) findViewById(R.id.upEmail);
+		etPhone = (EditText) findViewById(R.id.upPhone);
+		etAddress = (EditText) findViewById(R.id.upAddress);
+		
+		etName.setText(getIntent().getStringExtra("nameValue"));
+		
+		
+	}
+
+}

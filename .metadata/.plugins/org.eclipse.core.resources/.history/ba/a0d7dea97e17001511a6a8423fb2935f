@@ -1,0 +1,5 @@
+package com.rama.bean;
+
+public class WebServiceHolder {
+
+}

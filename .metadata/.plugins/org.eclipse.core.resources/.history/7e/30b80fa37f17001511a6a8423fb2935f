@@ -1,0 +1,18 @@
+package com.rama.bean;
+
+import com.android.volley.RequestQueue;
+
+import android.app.Application;
+
+public class WebServiceHolder extends Application{
+	private RequestQueue mRequestQueue;
+	private static WebServiceHolder mInstance;
+	
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		mInstance = this;
+	}
+	
+	
+}

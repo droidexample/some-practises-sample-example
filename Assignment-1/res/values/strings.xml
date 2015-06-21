@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Assignment-1</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_add_contact">Add Contact</string>
+    <string name="contact_title">Contact Employee</string>
+    <string name="contact_title_bar"> Submit</string>
+    <string name="ac_edit">save</string>
+    <string name="ac_delete">Delete</string>
+    <string name="ac_favorite">Favorite</string>
+    <string name="title_activity_search">SearchActivity</string>
+    <string name="title_activity_delete">DeleteActivity</string>
+    <string name="title_activity_details">DetailsActivity</string>
+    <string name="title_activity_edit">EditActivity</string>
+    <string name="title_activity_splash_screen">Contact Manager</string>
+    <string name="title_activity_mail">MailActivity</string>
+
+</resources>

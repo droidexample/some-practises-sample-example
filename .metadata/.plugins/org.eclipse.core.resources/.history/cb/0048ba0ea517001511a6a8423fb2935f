@@ -1,0 +1,79 @@
+package com.rama.vollaywebservicedemo;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.Request.Method;
+import com.android.volley.toolbox.StringRequest;
+import com.rama.bean.Contact;
+
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.os.Bundle;
+import android.widget.EditText;
+import android.widget.Toast;
+
+public class UpdateActivity extends Activity {
+
+	String updateUrl = "http://10.0.2.2/onlineregistration/update_contact.php";
+	
+	EditText etName, etEmail, etPhone, etAddress;
+	ProgressDialog pd;
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_update);
+		etName = (EditText) findViewById(R.id.upName);
+		etEmail = (EditText) findViewById(R.id.upEmail);
+		etPhone = (EditText) findViewById(R.id.upPhone);
+		etAddress = (EditText) findViewById(R.id.upAddress);
+
+		etName.setText(getIntent().getStringExtra("nameValue"));
+		etEmail.setText(getIntent().getStringExtra("emailValue"));
+		etPhone.setText(getIntent().getStringExtra("phoneValue"));
+		etAddress.setText(getIntent().getStringExtra("addressValue"));
+
+		pd = new ProgressDialog(this);
+		pd.setMessage("Loading.....");
+		pd.setCancelable(false);
+		
+	}
+
+	private void updateData() {
+		pd.show();
+		
+
+
+		StringRequest updateRequest = new StringRequest(updateUrl,
+			new Response.Listener<String>() {
+
+					@Override
+					public void onResponse(String response) {
+
+						pd.dismiss();
+						
+
+						Toast.makeText(getApplicationContext(),
+								"Data Inserted Successfully", Toast.LENGTH_LONG)
+								.show();
+					}
+				}, new Response.ErrorListener() {
+
+					@Override
+					public void onErrorResponse(VolleyError error) {
+						pd.dismiss();
+						Toast.makeText(getApplicationContext(),
+								"failed to insert", Toast.LENGTH_LONG).show();
+					}
+				}) ;
+
+		// adding request queue
+
+		WebServiceHolder.getInstance().addToReqQueue(postRequest);
+	}
+
+	
+}

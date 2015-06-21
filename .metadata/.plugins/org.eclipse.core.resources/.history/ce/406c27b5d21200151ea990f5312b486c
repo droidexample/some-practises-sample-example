@@ -1,0 +1,7 @@
+package com.example.swapdemo;
+
+import android.support.v4.app.FragmentPagerAdapter;
+
+public class FragmentPageAdapter extends FragmentPagerAdapter{
+
+}
